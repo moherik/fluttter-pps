@@ -138,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       Map roomMap = jsonDecode(response.body);
       var room = Room.fromJson(roomMap);
-      print(room.status);
 
       if (room.status == "OPEN") {
         Navigator.push(

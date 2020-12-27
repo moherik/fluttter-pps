@@ -60,6 +60,7 @@ class _ResultScreenState extends State<ResultScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   countBoard(
                       label: "Suara Sah",

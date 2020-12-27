@@ -47,21 +47,26 @@ class _VoteScreenState extends State<VoteScreen> {
         padding: EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                countBoard(
-                    label: "Suara Sah", value: validVote, color: Colors.blue),
-                countBoard(
-                  label: "Suara Tidak Sah*",
-                  value: invalidVote,
-                  color: Colors.red,
-                  onTap: () => _incInvalidVoteState(),
-                ),
-                countBoard(
-                    label: "Total Suara", value: totalVote, color: Colors.green)
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  countBoard(
+                      label: "Suara Sah", value: validVote, color: Colors.blue),
+                  countBoard(
+                    label: "Suara Tidak Sah*",
+                    value: invalidVote,
+                    color: Colors.red,
+                    onTap: () => _incInvalidVoteState(),
+                  ),
+                  countBoard(
+                      label: "Total Suara",
+                      value: totalVote,
+                      color: Colors.green)
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
@@ -236,6 +241,12 @@ class _VoteScreenState extends State<VoteScreen> {
       );
     }
 
+    double imageHeight;
+    MediaQueryData queryData;
+
+    queryData = MediaQuery.of(context);
+    imageHeight = queryData.size.height / 6;
+
     return Column(
       children: <Widget>[
         SizedBox(height: 10.0),
@@ -265,7 +276,7 @@ class _VoteScreenState extends State<VoteScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   child: Image.network(
                     "${candidate.image}",
-                    height: 160,
+                    height: imageHeight,
                   ),
                 ),
               ),
@@ -307,25 +318,21 @@ class _VoteScreenState extends State<VoteScreen> {
   Widget countBoard({String label, int value, Color color, onTap}) {
     return FlatButton(
       onPressed: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Text(label, style: Theme.of(context).textTheme.caption),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child:
-                  Text("$value", style: Theme.of(context).textTheme.headline5),
+      child: Column(
+        children: [
+          Text(label, style: Theme.of(context).textTheme.caption),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            child: Text("$value", style: Theme.of(context).textTheme.headline5),
+          ),
+          SizedBox(
+            height: 10,
+            width: 30,
+            child: DecoratedBox(
+              decoration: BoxDecoration(color: color),
             ),
-            SizedBox(
-              height: 10,
-              width: 30,
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: color),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
