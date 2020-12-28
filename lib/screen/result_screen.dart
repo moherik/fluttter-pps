@@ -26,7 +26,7 @@ class _ResultScreenState extends State<ResultScreen> {
     return WillPopScope(
       onWillPop: () async {
         await Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+            .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomeScreen()), ModalRoute.withName("/"));
 
         return Future.value(true);
       },

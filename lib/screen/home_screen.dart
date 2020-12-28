@@ -90,7 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: TextField(
-                            autofocus: true,
                             controller: textCodeController,
                             textCapitalization: TextCapitalization.characters,
                             decoration: InputDecoration(
