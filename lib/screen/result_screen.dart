@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pps/constant.dart';
-import 'package:pps/screen/home_screen.dart';
 import 'package:pps/model/room.dart';
 import 'package:pps/model/candidate.dart';
 
@@ -23,65 +22,57 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        await Navigator.of(context)
-            .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomeScreen()), ModalRoute.withName("/"));
-
-        return Future.value(true);
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Hasil Suara",
-              style: TextStyle(color: Colors.black),
-            ),
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.black),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Hasil Suara",
+            style: TextStyle(color: Colors.black),
           ),
-          body: Container(
-            color: Colors.white,
-            child: ListView(children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(
-                    top: 20.0, left: 20.0, bottom: 20.0, right: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text("${room.name}",
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headline6),
-                    Text("Code: ${room.code}"),
-                    Text("Deskripsi: ${room.description ?? ''}"),
-                  ],
-                ),
-              ),
-              Divider(),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  countBoard(
-                      label: "Suara Sah",
-                      value: room.validVote,
-                      color: Colors.blue),
-                  countBoard(
-                    label: "Suara Tidak Sah",
-                    value: room.invalidVote,
-                    color: Colors.red,
-                  ),
-                  countBoard(
-                      label: "Total Suara",
-                      value: room.totalVote,
-                      color: Colors.green)
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+        body: Container(
+          color: Colors.white,
+          child: ListView(children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(
+                  top: 20.0, left: 20.0, bottom: 20.0, right: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text("${room.name}",
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline6),
+                  Text("Code: ${room.code}"),
+                  Text("Deskripsi: ${room.description ?? ''}"),
                 ],
               ),
-              Divider(),
-              Container(child: candidatesBuilder())
-            ]),
-          )),
-    );
+            ),
+            Divider(),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                countBoard(
+                    label: "Suara Sah",
+                    value: room.validVote,
+                    color: Colors.blue),
+                countBoard(
+                  label: "Suara Tidak Sah",
+                  value: room.invalidVote,
+                  color: Colors.red,
+                ),
+                countBoard(
+                    label: "Total Suara",
+                    value: room.totalVote,
+                    color: Colors.green)
+              ],
+            ),
+            Divider(),
+            Container(child: candidatesBuilder())
+          ]),
+        ));
   }
 
   Future<List<Candidate>> fetchCandidates() async {

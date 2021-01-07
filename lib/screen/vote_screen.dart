@@ -50,8 +50,6 @@ class _VoteScreenState extends State<VoteScreen> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   countBoard(
                       label: "Suara Sah", value: validVote, color: Colors.blue),
@@ -59,7 +57,8 @@ class _VoteScreenState extends State<VoteScreen> {
                     label: "Suara Tidak Sah*",
                     value: invalidVote,
                     color: Colors.red,
-                    onTap: () => _incInvalidVoteState(),
+                    onInc: () => _incInvalidVoteState(),
+                    onDec: () => _decInvalidVoteState(),
                   ),
                   countBoard(
                       label: "Total Suara",
@@ -234,9 +233,57 @@ class _VoteScreenState extends State<VoteScreen> {
       counterLabel = Column(
         children: <Widget>[
           SizedBox(
-            height: 10,
+            height: 5,
           ),
-          Text("$totalVote", style: Theme.of(context).textTheme.headline6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                clipBehavior: Clip.antiAlias,
+                child: Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    icon: Icon(Icons.remove_circle_outline),
+                    splashColor: Colors.red,
+                    onPressed: () {
+                      final _vote = votes
+                          .firstWhere((el) => el.candidateId == candidateId);
+                      _decValidVoteState();
+                      if (_vote.total <= 0) return null;
+                      setState(() {
+                        _vote.total = _vote.total - 1;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text("$totalVote",
+                    style: Theme.of(context).textTheme.headline6),
+              ),
+              Container(
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                clipBehavior: Clip.antiAlias,
+                child: Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    splashColor: Colors.blue,
+                    onPressed: () {
+                      final _vote = votes
+                          .firstWhere((el) => el.candidateId == candidateId);
+                      _incValidVoteState();
+                      setState(() {
+                        _vote.total = _vote.total + 1;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       );
     }
@@ -307,7 +354,7 @@ class _VoteScreenState extends State<VoteScreen> {
               ),
               Container(
                 child: counterLabel,
-              )
+              ),
             ],
           ),
         ),
@@ -315,16 +362,56 @@ class _VoteScreenState extends State<VoteScreen> {
     );
   }
 
-  Widget countBoard({String label, int value, Color color, onTap}) {
-    return FlatButton(
-      onPressed: onTap,
-      child: Column(
+  Widget countBoard({String label, int value, Color color, onInc, onDec}) {
+    Widget child;
+
+    if (onInc != null && onDec != null) {
+      child = Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(label, style: Theme.of(context).textTheme.caption),
+          Container(
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            clipBehavior: Clip.antiAlias,
+            child: Material(
+              color: Colors.transparent,
+              child: IconButton(
+                icon: Icon(Icons.remove_circle_outline),
+                splashColor: Colors.red,
+                onPressed: onDec,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Text("$value", style: Theme.of(context).textTheme.headline5),
           ),
+          Container(
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            clipBehavior: Clip.antiAlias,
+            child: Material(
+              color: Colors.transparent,
+              child: IconButton(
+                  icon: Icon(Icons.add_circle_outline),
+                  splashColor: Colors.red,
+                  onPressed: onInc),
+            ),
+          ),
+        ],
+      );
+    } else {
+      child = Padding(
+        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+        child: Text("$value", style: Theme.of(context).textTheme.headline5),
+      );
+    }
+
+    return Container(
+      margin: EdgeInsets.only(left: 15.0, right: 15.0),
+      child: Column(
+        children: [
+          Text(label, style: Theme.of(context).textTheme.caption),
+          child,
           SizedBox(
             height: 10,
             width: 30,
@@ -385,7 +472,7 @@ class _VoteScreenState extends State<VoteScreen> {
       room.invalidVote = invalidVote;
       room.totalVote = totalVote;
 
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => ResultScreen(room: room)));
     } else {
       setState(() {
@@ -401,10 +488,28 @@ class _VoteScreenState extends State<VoteScreen> {
     });
   }
 
+  void _decValidVoteState() {
+    setState(() {
+      if (validVote > 0) {
+        validVote = validVote - 1;
+        totalVote = totalVote - 1;
+      }
+    });
+  }
+
   void _incInvalidVoteState() {
     setState(() {
       invalidVote = invalidVote + 1;
       totalVote = totalVote + 1;
+    });
+  }
+
+  void _decInvalidVoteState() {
+    setState(() {
+      if (invalidVote > 0) {
+        invalidVote = invalidVote - 1;
+        totalVote = totalVote - 1;
+      }
     });
   }
 }

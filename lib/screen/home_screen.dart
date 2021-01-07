@@ -33,14 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 20.0,
               ),
               Text(
-                'Aplikasi Perhitungan Surat Suara',
+                'Aplikasi Proses Perhitungan Surat Suara',
                 style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(
                 height: 10.0,
               ),
               Text(
-                'Join ke room menggunakan code untuk dapat mengakses dan melakukan perhitungan surat suara.',
+                'Join ke room menggunakan kode untuk dapat mengakses dan melakukan perhitungan surat suara.',
                 style: Theme.of(context).textTheme.caption,
                 textAlign: TextAlign.center,
               ),
