@@ -383,7 +383,7 @@ class _VoteScreenState extends State<VoteScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text("$value", style: Theme.of(context).textTheme.headline5),
           ),
           Container(
